@@ -63,3 +63,10 @@
 
 <!-- head custom -->
 {{- partial "extended_head.html" . }}
+
+{{ range .Site.Params.plugins_css }}
+	<link rel="stylesheet" href="{{ . }}" />
+{{ end }}
+{{ range $filename := .Site.Params.plugins_html }}
+	{{ partial $filename $ }}
+{{ end }}
