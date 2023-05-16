@@ -1,16 +1,18 @@
 {{ define "main" }}
-  <div class="posts">
+  <div class="posts h-feed">
     {{ $isntDefault := not (or (eq (trim $.Site.Params.contentTypeName " ") "posts") (eq (trim $.Site.Params.contentTypeName " ") "")) }}
     {{ $contentTypeName := cond $isntDefault (string $.Site.Params.contentTypeName) "posts" }}
     {{ $paginator := .Paginate (where .Site.Pages "Type" $contentTypeName) }}
 
     {{ range $paginator.Pages }}
-    <div class="post on-list">
-      <h1 class="post-title"><a href="{{ .Permalink }}">{{ .Title | markdownify }}</a></h1>
-      
+    <div class="post on-list h-entry">
+      {{ if .Title }}
+        <h1 class="post-title p-name"><a href="{{ .Permalink }}">{{ .Title | markdownify }}</a></h1>
+      {{ end }}
+
       <div class="post-meta">
         <span class="post-date">
-          <a href="{{.RelPermalink}}">{{ .Date.Format ($.Site.Params.DateFormatList | default "2006-01-02") }}</a>
+          <a href="{{.Permalink}}" class="u-url"><time datetime="{{ .Date.Format "2006-01-02 15:04:05 -0700" }}" class="dt-published">{{ .Date.Format ($.Site.Params.DateFormatList | default "2006-01-02") }}</time></a>
         </span>
         {{ with .Params.Author }}<span class="post-author">— {{ $.Site.Params.WrittenBy | default "Written by" }} {{ . }}</span>{{ end }}
         {{ if $.Site.Params.ShowReadingTime }}
@@ -35,11 +37,11 @@
         {{ end }}
       {{ end }}
 
-      <div class="post-content">
-		{{ .Content }}        
+      <div class="post-content e-content">
+		{{ .Content }}
       </div>
 	  {{ if .Truncated }}
-<!-- 
+<!--
 	      <div><a class="read-more button" href="{{.RelPermalink}}">{{ $.Site.Params.ReadMore | default "Read more" }} →</a></div>
  -->
       {{ end }}
